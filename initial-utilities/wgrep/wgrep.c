@@ -16,7 +16,8 @@ int
 main(int argc, char** argv)
 {
 	/* prototypes */
-	bool wgrpnl(char*, int, char**); /* file-to-file copy */
+	bool wgrpnl(char*, int, char**); /* file open and grep loop */
+	void wgrepf(char*, FILE*, FILE*); /* file-to-file copy */
 
 	/* constants */
 	const int I_KEY = 1; /* index of key in the argv */
@@ -25,17 +26,24 @@ main(int argc, char** argv)
 	bool has_error; /* whether any error occured */
 
 	/* check if enough arguments */
-	has_error = (FILE_OFF > argc);
-	if (!has_error) {
+	if (FILE_OFF < argc) {
 		/* if so, loop through the file names and perform wgrepf */
 		has_error = wgrpnl(
 			argv[I_KEY], (argc - FILE_OFF), (argv + FILE_OFF));
 	} /* end if (!has_error) */
 
+	/* if no files, but search key is provided */
+	else if (FILE_OFF == argc) {
+		/* then use stdin for input */
+		wgrepf(argv[I_KEY], stdin, stdout);
+		has_error = false;
+	} /* end if (has_error) if (FILE_OFF == argc) */
+
 	else {
 		/* if not, then print the usage statement */
 		fprintf(stderr, "wgrep: searchterm [file...]\n");
-	} /* end if (has_error) */
+		has_error = true;
+	} /* end if (has_error) if (FILE_OFF != argc) */
 
 	/* no errors if last file opened, error code 1 otherwise */
 	return ((has_error) ? 0 : 1);
@@ -73,7 +81,7 @@ wgrpnl(char* key, const int N_NAMES, char** names) {
 
 		/* if able to open */
 		if (is_open) {
-			/* concatenate the current file */
+			/* grep the current file */
 			wgrepf(key, file, stdout);
 			/* close the current file */
 			fclose(file);
@@ -103,8 +111,9 @@ wgrepf(char* key, FILE* infile, FILE* outfile)
 
 	size_t len; /* number of characters read */
 	/* current line buffer */
-	char* line;
+	char* line = NULL;
 	/* pointer to the substring where the key is found at each line */
+	/* this pointer is initialized to NULL to allow allocation for stdin */
 	char *substr;
 
 	/* read to line buffer while not EOF */
