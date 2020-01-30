@@ -32,7 +32,7 @@ main(int argc, char** argv)
 
 		/* if able to open */
 		if (is_open) {
-			/* concatenate the current file */
+			/* decompress the current file */
 			wuzf(file, stdout);
 			/* close the current file */
 			fclose(file);
@@ -40,7 +40,7 @@ main(int argc, char** argv)
 
 		else {
 			/* print an error message */
-			fprintf(stderr, "wcat: cannot open file\n");
+			fprintf(stderr, "wunzip: cannot open file\n");
 		} /* end (is_open) else */
 	} /* end for (; (is_open && (k < argc)); ); */
 

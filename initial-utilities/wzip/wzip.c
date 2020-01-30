@@ -1,7 +1,6 @@
 /**
- * ostep-projects/initial-utilities/wcat/wcat.c
- * Concatenates the contents of file specified by the command-line
- * arguments to standard output. 
+ * ostep-projects/initial-utilities/wzip/wzip.c
+ * Compresses files to standard output.
  * by: Leomar Duran <https://github.com/lduran2>
  * for: CIS 3207 Assignment 0
  * date: 2020-01-29
@@ -33,7 +32,7 @@ main(int argc, char** argv)
 
 		/* if able to open */
 		if (is_open) {
-			/* concatenate the current file */
+			/* compress the current file */
 			wzipf(file, stdout);
 			/* close the current file */
 			fclose(file);
@@ -41,7 +40,7 @@ main(int argc, char** argv)
 
 		else {
 			/* print an error message */
-			fprintf(stderr, "wcat: cannot open file\n");
+			fprintf(stderr, "wzip: cannot open file\n");
 		} /* end (is_open) else */
 	} /* end for (; (is_open && (k < argc)); ); */
 
